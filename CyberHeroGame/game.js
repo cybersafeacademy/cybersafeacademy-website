@@ -4,6 +4,10 @@ let currentQuestion = 0;
 let score = 0;
 let questions = [];
 
+// ✅ CREATE AUDIO OBJECTS ONCE AT THE TOP
+const yaySound = new Audio('/CyberHeroGame/yay.mp3');
+const uhohSound = new Audio('/CyberHeroGame/ohno.mp3');
+
 // Question Database
 const questionBank = {
     password: [
@@ -237,6 +241,15 @@ function selectAnswer(index) {
     const question = questions[currentQuestion];
     const isCorrect = question.answers[index].correct;
     
+    // ✅ PLAY SOUND IMMEDIATELY - BEFORE ANYTHING ELSE!
+    if (isCorrect) {
+        yaySound.currentTime = 0;
+        yaySound.play().catch(e => console.log('Audio play failed:', e));
+    } else {
+        uhohSound.currentTime = 0;
+        uhohSound.play().catch(e => console.log('Audio play failed:', e));
+    }
+    
     // Disable all buttons
     const buttons = document.querySelectorAll('.answer-btn');
     buttons.forEach(btn => btn.classList.add('disabled'));
@@ -250,10 +263,8 @@ function selectAnswer(index) {
         showCorrectFeedback(question.tip);
         createBalloons();
         createConfetti();
-        playSound('correct');
     } else {
         showWrongFeedback(question.tip);
-        playSound('wrong');
     }
     
     // Next question after delay
@@ -346,24 +357,6 @@ function createConfetti() {
             }, 3000);
         }, i * 30);
     }
-}
-
-// Play Sound
-function playSound(type) {
-    // Play real audio files!
-    const sound = document.getElementById(type + 'Sound');
-    
-    if (sound && sound.src) {
-        sound.currentTime = 0; // Reset to start
-        sound.volume = 0.7; // 70% volume (not too loud!)
-        sound.play().catch(e => {
-            console.log('Audio play failed:', e);
-            // Fallback to console if audio fails
-            console.log('🔊 Sound would play:', type === 'correct' ? 'Kids cheering!' : 'Uh-oh!');
-        });
-    }
-    
-    console.log('🔊 Playing sound:', type === 'correct' ? 'Kids cheering! 🎉' : 'Uh-oh! 😊');
 }
 
 // Show Score Screen
