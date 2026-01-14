@@ -210,19 +210,122 @@
             color: #64748b;
         }
 
-        .progress-bar {
-            height: 15px;
-            background: #E2E8F0;
-            border-radius: 10px;
-            overflow: hidden;
+        /* Snakes & Ladders Board */
+        .board-container {
             margin-bottom: 2rem;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            transition: width 0.5s;
-            border-radius: 10px;
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            max-width: 500px;
+            margin: 0 auto 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .board-square {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 1.5rem;
+        }
+
+        .board-square.square-1 { background: linear-gradient(135deg, #DBEAFE, #93C5FD); }
+        .board-square.square-2 { background: linear-gradient(135deg, #FED7AA, #FDBA74); }
+        .board-square.square-3 { background: linear-gradient(135deg, #D9F99D, #BEF264); }
+        .board-square.square-4 { background: linear-gradient(135deg, #FBCFE8, #F9A8D4); }
+        .board-square.square-5 { background: linear-gradient(135deg, #FEF3C7, #FDE68A); }
+        .board-square.square-6 { background: linear-gradient(135deg, #E9D5FF, #D8B4FE); }
+        .board-square.square-7 { background: linear-gradient(135deg, #A5F3FC, #67E8F9); }
+        .board-square.square-8 { background: linear-gradient(135deg, #FCA5A5, #F87171); }
+        .board-square.square-9 { background: linear-gradient(135deg, #C7D2FE, #A5B4FC); }
+        .board-square.square-10 { 
+            background: linear-gradient(135deg, #FDE047, #FACC15);
+            border-color: #F59E0B;
+            border-width: 4px;
+        }
+
+        .board-square.active {
+            border-color: #667eea;
+            border-width: 4px;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            transform: scale(1.1);
+        }
+
+        .square-number {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #1E293B;
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+
+        .square-icon {
+            font-size: 2.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        .player-token {
+            font-size: 2.5rem;
+            animation: bounce 1s infinite;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .ladder-icon, .snake-icon {
+            font-size: 2rem;
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .ladder-icon {
+            animation: wiggle 2s infinite;
+        }
+
+        .snake-icon {
+            animation: slither 3s infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        @keyframes slither {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .board-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-item span {
+            font-size: 1.5rem;
         }
 
         .question-card {
@@ -554,11 +657,59 @@
             </div>
             <div class="quiz-header">
                 <div class="score-display">⭐ <span id="scoreDisplay">0</span> points</div>
-                <div class="question-counter">Question <span id="questionNumber">1</span>/5</div>
+                <div class="question-counter">Question <span id="questionNumber">1</span>/10</div>
             </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            
+            <!-- Snakes & Ladders Board -->
+            <div class="board-container">
+                <div class="board">
+                    <!-- Row 3: Squares 10, 9, 8 -->
+                    <div class="board-square square-10" data-square="10">
+                        <div class="square-number">10</div>
+                        <div class="square-icon">🏆</div>
+                    </div>
+                    <div class="board-square square-9" data-square="9">
+                        <div class="square-number">9</div>
+                    </div>
+                    <div class="board-square square-8" data-square="8">
+                        <div class="square-number">8</div>
+                        <div class="snake-icon">🐍</div>
+                    </div>
+                    
+                    <!-- Row 2: Squares 7, 6, 5 -->
+                    <div class="board-square square-7" data-square="7">
+                        <div class="square-number">7</div>
+                    </div>
+                    <div class="board-square square-6" data-square="6">
+                        <div class="square-number">6</div>
+                    </div>
+                    <div class="board-square square-5" data-square="5">
+                        <div class="square-number">5</div>
+                        <div class="ladder-icon">🪜</div>
+                    </div>
+                    
+                    <!-- Row 1: Squares 4, 3, 2, 1 -->
+                    <div class="board-square square-4" data-square="4">
+                        <div class="square-number">4</div>
+                    </div>
+                    <div class="board-square square-3" data-square="3">
+                        <div class="square-number">3</div>
+                        <div class="ladder-icon">🪜</div>
+                    </div>
+                    <div class="board-square square-2" data-square="2">
+                        <div class="square-number">2</div>
+                    </div>
+                    <div class="board-square square-1 active" data-square="1">
+                        <div class="square-number">1</div>
+                        <div class="player-token" id="playerToken">🦸‍♂️</div>
+                    </div>
+                </div>
+                <div class="board-legend">
+                    <div class="legend-item"><span>🪜</span> Ladder - Jump ahead!</div>
+                    <div class="legend-item"><span>🐍</span> Snake - Slide back!</div>
+                </div>
             </div>
+            
             <div class="question-card">
                 <div class="question-text" id="questionText"></div>
                 <div class="answers-grid" id="answersGrid"></div>
@@ -574,7 +725,7 @@
             </div>
             <div class="score-emoji" id="scoreEmoji">🏆</div>
             <h2 class="score-title" id="scoreTitle">Amazing Job!</h2>
-            <div class="final-score"><span id="finalScore">0</span> / 50</div>
+            <div class="final-score"><span id="finalScore">0</span> / 100</div>
             <p class="score-message" id="scoreMessage">You're a true Cyber Hero!</p>
             <button class="btn-play-again" onclick="playAgain()">Play Again</button>
             <button class="btn-play-again" onclick="backToLevels()">Choose New Quest</button>
