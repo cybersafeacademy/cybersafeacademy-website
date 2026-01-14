@@ -416,5 +416,12 @@ function playAgain() {
 // Back to Levels
 function backToLevels() {
     document.getElementById('scoreScreen').style.display = 'none';
+    document.getElementById('quizScreen').style.display = 'none';
     document.getElementById('levelSelection').style.display = 'block';
+}
+
+// Back to Home (Website)
+function backToHome() {
+    // Go back to the Kids page
+    window.location.href = '/cybersafe-kids';
 }
