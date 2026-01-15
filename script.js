@@ -29,12 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const navMenu = document.querySelector('.nav-menu');
     
     if (mobileMenuToggle && navMenu) {
-        console.log('Mobile menu initialized'); // Debug log
+        console.log('Mobile menu initialized');
         
         mobileMenuToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Menu toggle clicked'); // Debug log
+            console.log('Menu toggle clicked');
             
             navMenu.classList.toggle('active');
             mobileMenuToggle.classList.toggle('active');
@@ -68,7 +68,101 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
-        console.log('Mobile menu elements not found'); // Debug log
+        console.log('Mobile menu elements not found');
+    }
+});
+
+// Success Notification Function
+function showSuccessNotification(message) {
+    // Remove any existing notifications
+    const existing = document.querySelector('.success-notification');
+    if (existing) {
+        existing.remove();
+    }
+    
+    // Create new notification
+    const notification = document.createElement('div');
+    notification.className = 'success-notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Remove after animation completes (5 seconds total)
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// Web3Forms Integration - UNIVERSAL FORM HANDLER
+document.addEventListener('DOMContentLoaded', () => {
+    // Handle all forms on the page
+    const forms = document.querySelectorAll('form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            // Add Web3Forms access key
+            formData.append('access_key', '0ddfe14d-dc06-4183-9f3d-a954bbaa8842');
+            
+            // Get form data as object for easier handling
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+            
+            // Disable submit button and show loading state
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span>Sending...</span>';
+            
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: json
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Success! Show notification
+                    showSuccessNotification('Thank you! Your submission has been received successfully. We\'ll get back to you soon. For urgent matters, contact cybersafeacademy@outlook.com');
+                    
+                    // Reset form
+                    form.reset();
+                } else {
+                    // Error from Web3Forms
+                    showSuccessNotification('Oops! Something went wrong. Please try again or email us directly at cybersafeacademy@outlook.com');
+                    console.error('Form submission error:', result);
+                }
+            } catch (error) {
+                // Network or other error
+                showSuccessNotification('Oops! Something went wrong. Please try again or email us directly at cybersafeacademy@outlook.com');
+                console.error('Form submission error:', error);
+            } finally {
+                // Re-enable submit button
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalButtonText;
+            }
+        });
+    });
+});
+
+// Kids Page - Special handling for Start Learning button
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if we're on the kids page
+    if (window.location.pathname.includes('cybersafe-kids')) {
+        // Update the navbar Start Learning button to go to kids game
+        const navStartLearning = document.querySelector('.navbar .start-learning-btn');
+        if (navStartLearning) {
+            navStartLearning.href = 'cyber-heroes-game.html';
+            navStartLearning.removeAttribute('target');
+            navStartLearning.removeAttribute('rel');
+        }
     }
 });
 
