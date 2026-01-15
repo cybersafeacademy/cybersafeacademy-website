@@ -167,13 +167,19 @@ a {
     flex-direction: column;
     gap: 0.375rem;
     cursor: pointer;
+    padding: 0.5rem;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    position: relative;
+    z-index: 1001;
 }
 
 .mobile-menu-toggle span {
-    width: 24px;
-    height: 2px;
+    width: 28px;
+    height: 3px;
     background: var(--dark-navy);
-    transition: var(--transition-base);
+    transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
 /* Hero Section */

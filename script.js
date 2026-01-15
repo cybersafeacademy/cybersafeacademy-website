@@ -23,34 +23,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Mobile Menu Toggle
-const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
-
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navMenu.classList.toggle('active');
-        mobileMenuToggle.classList.toggle('active');
-    });
+// Mobile Menu Toggle - Enhanced for reliability
+document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
     
-    // Close menu when clicking a link
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-            mobileMenuToggle.classList.remove('active');
+    if (mobileMenuToggle && navMenu) {
+        console.log('Mobile menu initialized'); // Debug log
+        
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Menu toggle clicked'); // Debug log
+            
+            navMenu.classList.toggle('active');
+            mobileMenuToggle.classList.toggle('active');
+            
+            // Prevent body scroll when menu is open
+            if (navMenu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         });
-    });
-    
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-            navMenu.classList.remove('active');
-            mobileMenuToggle.classList.remove('active');
-        }
-    });
-}
+        
+        // Close menu when clicking a link
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                mobileMenuToggle.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                if (navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    mobileMenuToggle.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+        });
+    } else {
+        console.log('Mobile menu elements not found'); // Debug log
+    }
+});
 
 // Smooth Scroll for Anchor Links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
